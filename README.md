@@ -2,6 +2,8 @@
 
 ![GIF of Vx.Wpf in action](images/MainTeaser.gif)
 
+> ⚠️ This is an unmaintained hackathon project. Use at your own risk. It's open source, so fork the code and improve it!
+
 Features | Descriptions
 --|--
 Supports all WPF controls | All properties are usable, classes are simply prefixed with `Vx`
