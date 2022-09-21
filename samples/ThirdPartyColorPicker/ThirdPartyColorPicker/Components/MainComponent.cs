@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Vx.Wpf;
+using Vx.Wpf.Core.ElementExtensions;
 
 namespace ThirdPartyColorPicker.Components
 {
@@ -16,36 +17,47 @@ namespace ThirdPartyColorPicker.Components
 
         protected override VxElement Render()
         {
-            return new VxStackPanel
+            return new VxGrid
             {
-                Orientation = Orientation.Horizontal,
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition { Width = new GridLength(300) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+                },
                 Children =
                 {
-                    new VxStandardColorPicker
+                    RenderColumn("Third-party control...", new VxStandardColorPicker
                     {
                         SelectedColor = _color.Value,
-                        ColorChanged = p => _color.Value = p.SelectedColor,
-                        Width = 300
+                        ColorChanged = p => _color.Value = p.SelectedColor
+                    }),
+
+                    RenderColumn("Selected color (our own controls)...", new VxBorder
+                    {
+                        Background = new SolidColorBrush(_color.Value)
+                    }).AttachProperties(el => Grid.SetColumn(el, 1))
+                }
+            };
+        }
+
+        private VxElement RenderColumn(string header, VxElement content)
+        {
+            return new VxGrid
+            {
+                RowDefinitions =
+                {
+                    new RowDefinition { Height = GridLength.Auto },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
+                },
+                Margin = new Thickness(24),
+                Children =
+                {
+                    new VxTextBlock
+                    {
+                        Text = header
                     },
 
-                    new VxStackPanel
-                    {
-                        Width = 300,
-                        Margin = new Thickness(24),
-                        Children =
-                        {
-                            new VxTextBlock
-                            {
-                                Text = "Selected color"
-                            },
-
-                            new VxBorder
-                            {
-                                Background = new SolidColorBrush(_color.Value),
-                                Height = 280
-                            }
-                        }
-                    }
+                    content.AttachProperties(el => Grid.SetRow(el, 1))
                 }
             };
         }
