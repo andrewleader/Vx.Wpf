@@ -12,7 +12,8 @@ namespace Vx.Wpf.TestApp.Components
         private readonly Type[] _pages = new Type[]
         {
             typeof(TextBoxExampleComponent),
-            typeof(StackPanelExampleComponent)
+            typeof(StackPanelExampleComponent),
+            typeof(BorderExampleComponent)
         };
 
         private readonly VxState<Type?> _selectedPage = new VxState<Type?>(null);

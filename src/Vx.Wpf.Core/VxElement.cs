@@ -97,12 +97,26 @@ namespace Vx.Wpf
                     }
                     else
                     {
-                        if (object.Equals(prevVal, newVal))
+                        // Handle nested singleton child views
+                        if (newVal is VxElement newVxElement)
+                        {
+                            if (prevVal is VxElement oldVxElement && oldVxElement.GetType() == newVxElement.GetType())
+                            {
+                                var existingUIVisual = uiProp!.GetValue(el) as UIElement;
+                                newVxElement.ApplyProperties(existingUIVisual, oldVxElement);
+                            }
+                            else
+                            {
+                                uiProp!.SetValue(el, newVxElement.ToUIElement());
+                            }
+                        }
+
+                        else if (object.Equals(prevVal, newVal))
                         {
                             continue;
                         }
 
-                        if (typeof(Delegate).IsAssignableFrom(propType))
+                        else if (typeof(Delegate).IsAssignableFrom(propType))
                         {
                             EventInfo eventInfo = UIType.GetEvent(prop.Name)!;
 

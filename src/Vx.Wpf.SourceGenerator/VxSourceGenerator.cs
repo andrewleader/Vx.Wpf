@@ -256,6 +256,16 @@ namespace Vx.Wpf
                 //    }
                 //}
 
+                if (IsUIElementType(propType))
+                {
+                    return new VxProperty
+                    {
+                        Name = prop.Name,
+                        StringType = "Vx.Wpf.VxElement",
+                        CanWrite = true
+                    };
+                }
+
                 return new VxProperty
                 {
                     Name = prop.Name,
@@ -324,20 +334,18 @@ namespace Vx.Wpf
             }
         }
 
-        private static bool IsUIElementType(INamedTypeSymbol type)
+        private static bool IsUIElementType(ITypeSymbol type)
         {
             try
             {
+                if (type.Name == "UIElement" && type.FullNamespace() == "System.Windows")
+                {
+                    return true;
+                }
+
                 if (type.BaseType != null)
                 {
-                    if (type.BaseType.Name == "UIElement" && type.FullNamespace() == "System.Windows")
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return IsUIElementType(type.BaseType);
-                    }
+                    return IsUIElementType(type.BaseType);
                 }
             }
             catch (Exception ex)
