@@ -39,6 +39,10 @@ public MainWindow()
 }
 ```
 
+4. Try using hot reload! You can enable hot reload on file save by opening the hot reload menu next to the "Start" button. Then, make changes within your `Render()` methods, click save, and watch the UI update!
+
+![Enabling hot reload](images/HotReloadSetting.png)
+
 ## Samples
 
 Browse the samples folder to see more examples.
