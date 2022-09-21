@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,6 +13,12 @@ namespace Vx.Wpf
     public abstract class VxElement
     {
         protected abstract Type UIType { get; }
+        private List<Action<UIElement>> _attachedPropertyActions = new List<Action<UIElement>>();
+
+        internal void AttachProperties(Action<UIElement> action)
+        {
+            _attachedPropertyActions.Add(action);
+        }
 
         internal UIElement ToUIElement()
         {
@@ -66,6 +73,7 @@ namespace Vx.Wpf
         }
 
         private static Type _elementCollectionType = typeof(List<VxElement>);
+        private static Type _listType = typeof(IList);
 
         internal void ApplyProperties(UIElement el, VxElement prevEl)
         {
@@ -93,6 +101,22 @@ namespace Vx.Wpf
                         {
                             var uiCollection = uiProp.GetValue(el) as UIElementCollection;
                             ReconcileList(prevVal as List<VxElement>, newVal as List<VxElement>, uiCollection);
+                        }
+
+                        // Other non-UI lists
+                        else if (_listType.IsAssignableFrom(propType))
+                        {
+                            // TODO: Could improve perf to reconcile existing values rather than clearing and re-creating
+                            var uiList = uiProp.GetValue(el) as IList;
+                            uiList.Clear();
+
+                            if (newVal is IList newList)
+                            {
+                                foreach (var val in newList)
+                                {
+                                    uiList.Add(val);
+                                }
+                            }
                         }
                     }
                     else
@@ -135,6 +159,12 @@ namespace Vx.Wpf
                             uiProp.SetValue(el, newVal);
                         }
                     }
+                }
+
+                foreach (var attachedPropertyAction in _attachedPropertyActions)
+                {
+                    // TODO: We don't support clearing previously set attached properties
+                    attachedPropertyAction.Invoke(el);
                 }
             }
             catch (Exception ex)

@@ -208,6 +208,16 @@ namespace Vx.Wpf
                         CanWrite = false
                     };
                 }
+                else if (IsIListType(propType, out string genericList))
+                {
+                    return new VxProperty
+                    {
+                        Name = prop.Name,
+                        StringType = genericList,
+                        CanWrite = false,
+                        DefaultValue = "new " + genericList + "()"
+                    };
+                }
                 else
                 {
                     return null;
@@ -353,6 +363,40 @@ namespace Vx.Wpf
                 throw new Exception("Failed in IsUIElementType: " + ex);
             }
 
+            return false;
+        }
+
+        private static bool IsExactlyIListType(INamedTypeSymbol type, out string genericList)
+        {
+            if (type.Name == "IList" && type.FullNamespace() == "System.Collections.Generic" && type.IsGenericType)
+            {
+                genericList = type.ToDisplayString().Replace("IList", "List");
+                return true;
+            }
+
+            genericList = null;
+            return false;
+        }
+
+        private static bool IsIListType(ITypeSymbol type, out string genericList)
+        {
+            if (type is INamedTypeSymbol namedType)
+            {
+                if (IsExactlyIListType(namedType, out genericList))
+                {
+                    return true;
+                }
+            }
+
+            foreach (var i in type.AllInterfaces)
+            {
+                if (IsExactlyIListType(i, out genericList))
+                {
+                    return true;
+                }
+            }
+
+            genericList = null;
             return false;
         }
 

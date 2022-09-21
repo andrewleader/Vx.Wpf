@@ -13,7 +13,8 @@ namespace Vx.Wpf.TestApp.Components
         {
             typeof(TextBoxExampleComponent),
             typeof(StackPanelExampleComponent),
-            typeof(BorderExampleComponent)
+            typeof(BorderExampleComponent),
+            typeof(GridExampleComponent)
         };
 
         private readonly VxState<Type?> _selectedPage = new VxState<Type?>(null);

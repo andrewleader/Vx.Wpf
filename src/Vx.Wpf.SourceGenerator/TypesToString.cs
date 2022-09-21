@@ -78,7 +78,14 @@ namespace Vx.Wpf.SourceGenerator
                 }
                 else if (prop.StringType != null)
                 {
-                    builder.Append($"public {prop.StringType} {prop.Name} {{ get; set; }}");
+                    builder.Append($"public {prop.StringType} {prop.Name} {{ get; ");
+
+                    if (prop.CanWrite)
+                    {
+                        builder.Append("set; ");
+                    }
+
+                    builder.Append("}");
                 }
                 else
                 {
