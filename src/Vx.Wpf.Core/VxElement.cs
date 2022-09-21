@@ -27,6 +27,39 @@ namespace Vx.Wpf
             return el;
         }
 
+        public VxElement()
+        {
+            if (!(this is VxComponent))
+            {
+                InitializeDefaultValues();
+            }
+        }
+
+        private static Dictionary<Type, UIElement> _defaultUIValues = new Dictionary<Type, UIElement>();
+        private void InitializeDefaultValues()
+        {
+            UIElement? defaultUI;
+            if (!_defaultUIValues.TryGetValue(UIType, out defaultUI))
+            {
+                defaultUI = Activator.CreateInstance(UIType) as UIElement;
+                _defaultUIValues.Add(UIType, defaultUI!);
+            }
+
+            foreach (var p in this.GetType().GetProperties().Where(i => i.CanRead && i.CanWrite))
+            {
+                var currVal = p.GetValue(this);
+                var uiProp = UIType.GetProperty(p.Name);
+                if (uiProp != null)
+                {
+                    var desiredDefaultVal = uiProp.GetValue(defaultUI);
+                    if (!object.Equals(currVal, desiredDefaultVal))
+                    {
+                        p.SetValue(this, desiredDefaultVal);
+                    }
+                }
+            }
+        }
+
         private void VxElement_Click(object sender, RoutedEventArgs e)
         {
             (this.GetType().GetProperty("Click").GetValue(this) as Action)();

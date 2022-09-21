@@ -132,76 +132,10 @@ namespace Vx.Wpf
                         continue;
                     }
 
-                    var propType = prop.Type;
-
-                    if (_propertyTypesToIgnore.Contains(propType.FullName()))
+                    var vxProp = GenerateVxProperty(prop);
+                    if (vxProp != null)
                     {
-                        continue;
-                    }
-
-                    if (prop.IsReadOnly)
-                    {
-                        // Children and other similar properties
-                        //if (_uiElementCollectionType.IsAssignableFrom(propType))
-                        if (prop.Name == "Children")
-                        {
-                            props.Add(new VxProperty
-                            {
-                                Name = prop.Name,
-                                PropertyType = propType,
-                                CanWrite = false
-                            });
-                        }
-                    }
-                    else
-                    {
-                        // TODO: Basic filtering of the below
-                        switch (prop.Name)
-                        {
-                            case "SelectionLength":
-                            case "SelectionStart":
-                            case "SelectedItem":
-                            case "PreferredPasteFormats":
-                                continue;
-                        }
-
-                        // Don't assign text-related fields that are based on current editing values
-                        //if (prop.DeclaringType == _textBoxType)
-                        //{
-                        //    switch (prop.Name)
-                        //    {
-                        //        case nameof(TextBox.SelectionLength):
-                        //        case nameof(TextBox.SelectionStart):
-                        //            continue;
-                        //    }
-                        //}
-
-                        //// Don't assign ListView SelectedItem
-                        //if (prop.DeclaringType == _listViewType)
-                        //{
-                        //    switch (prop.Name)
-                        //    {
-                        //        case nameof(ListView.SelectedItem):
-                        //            continue;
-                        //    }
-                        //}
-
-                        //// Don't support InkCanvas PreferredPasteFormats yet, it requires IEnumerable
-                        //if (prop.DeclaringType == _inkCanvasType)
-                        //{
-                        //    switch (prop.Name)
-                        //    {
-                        //        case nameof(InkCanvas.PreferredPasteFormats):
-                        //            continue;
-                        //    }
-                        //}
-
-                        props.Add(new VxProperty
-                        {
-                            Name = prop.Name,
-                            PropertyType = propType,
-                            CanWrite = true
-                        });
+                        props.Add(vxProp);
                     }
                 }
 
@@ -249,6 +183,85 @@ namespace Vx.Wpf
             catch (Exception ex)
             {
                 throw new Exception("Failed in GenerateType with type " + type.Name + ". " + ex.ToString().Replace("\n", " "));
+            }
+        }
+
+        private static VxProperty GenerateVxProperty(IPropertySymbol prop)
+        {
+            var propType = prop.Type;
+
+            if (_propertyTypesToIgnore.Contains(propType.FullName()))
+            {
+                return null;
+            }
+
+            if (prop.IsReadOnly)
+            {
+                // Children and other similar properties
+                //if (_uiElementCollectionType.IsAssignableFrom(propType))
+                if (prop.Name == "Children")
+                {
+                    return new VxProperty
+                    {
+                        Name = prop.Name,
+                        PropertyType = propType,
+                        CanWrite = false
+                    };
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                // TODO: Basic filtering of the below
+                switch (prop.Name)
+                {
+                    case "SelectionLength":
+                    case "SelectionStart":
+                    case "SelectedItem":
+                    case "PreferredPasteFormats":
+                        return null;
+                }
+
+                // Don't assign text-related fields that are based on current editing values
+                //if (prop.DeclaringType == _textBoxType)
+                //{
+                //    switch (prop.Name)
+                //    {
+                //        case nameof(TextBox.SelectionLength):
+                //        case nameof(TextBox.SelectionStart):
+                //            continue;
+                //    }
+                //}
+
+                //// Don't assign ListView SelectedItem
+                //if (prop.DeclaringType == _listViewType)
+                //{
+                //    switch (prop.Name)
+                //    {
+                //        case nameof(ListView.SelectedItem):
+                //            continue;
+                //    }
+                //}
+
+                //// Don't support InkCanvas PreferredPasteFormats yet, it requires IEnumerable
+                //if (prop.DeclaringType == _inkCanvasType)
+                //{
+                //    switch (prop.Name)
+                //    {
+                //        case nameof(InkCanvas.PreferredPasteFormats):
+                //            continue;
+                //    }
+                //}
+
+                return new VxProperty
+                {
+                    Name = prop.Name,
+                    PropertyType = propType,
+                    CanWrite = true
+                };
             }
         }
 

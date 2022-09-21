@@ -92,6 +92,13 @@ namespace Vx.Wpf.SourceGenerator
                     builder.Append("}");
                 }
 
+                if (prop.DefaultValue != null)
+                {
+                    builder.Append(" = ");
+                    builder.Append(prop.DefaultValue);
+                    builder.Append(";");
+                }
+
                 builder.Append("\n");
             }
 

@@ -16,5 +16,7 @@ namespace Vx.Wpf.SourceGenerator
         public string StringType { get; set; }
 
         public bool CanWrite { get; set; }
+
+        public string DefaultValue { get; set; }
     }
 }
