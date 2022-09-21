@@ -49,6 +49,32 @@ namespace Vx.Wpf.TestApp.Components.Pages
                         Padding = new System.Windows.Thickness(12)
                     },
 
+                    new VxTextBlock
+                    {
+                        Text = "Border with stack panel that has nested child that changes properties"
+                    },
+
+                    new VxBorder
+                    {
+                        Child = new VxStackPanel
+                        {
+                            Children =
+                            {
+                                new VxTextBlock
+                                {
+                                    Text = "Line 1"
+                                },
+
+                                new VxTextBlock
+                                {
+                                    Text = "IsTextBox: " + _isTextBox.Value
+                                }
+                            }
+                        },
+                        Background = new SolidColorBrush(Color.FromArgb(25, 255, 0, 0)),
+                        Padding = new System.Windows.Thickness(12)
+                    },
+
                     new VxButton
                     {
                         Content = "Change",
