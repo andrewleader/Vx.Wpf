@@ -47,6 +47,8 @@ Browse the samples folder to see more examples.
 
 To make your components interactive, you have to add **state**. Each component's `Render()` method is essentially a function on top of the component's current state. And if the component's state values change, `Render()` will be called again and the UI will be updated with any changes that occured.
 
+![Button example](images\Button.gif)
+
 ```csharp
 public class MyComponent : VxComponent
 {
@@ -80,6 +82,8 @@ You can define infinitely many `VxState<T>` values.
 
 The next thing to learn is how to handle text boxes (and other similar controls). This is a little different than classic WPF, since your component's state must also hold the current text value. **Make sure to handle both the `Text` and the `TextChanged` properties as seen below.**
 
+![Text box example](images\Name.gif)
+
 ```csharp
 public class MyComponent : VxComponent
 {
@@ -108,6 +112,8 @@ public class MyComponent : VxComponent
 ```
 
 This same pattern will follow for combo boxes, check boxes, and more.
+
+![Combo box example](images\ComboBox.gif)
 
 ```csharp
 public class MyComponent : VxComponent
@@ -149,6 +155,8 @@ new VxTextBlock
     MouseLeave = (TextBlock t) => _isMouseOver.Value = false
 }
 ```
+
+![Mouse over example](images/MouseOver.gif)
 
 The event args from the event are currently NOT projected. Most events, like TextChanged or SelectionChanged simply require access to the raw UI element to get the current value, so support for passing through those event args haven't been added yet.
 
