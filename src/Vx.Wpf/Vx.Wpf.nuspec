@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<!-- Required elements-->
+		<id>Vx.Wpf</id>
+		<version>0.0.6</version>
+		<description>Use WPF UI controls in a declarative manner, including third-party controls!</description>
+		<authors>andrewleader</authors>
+		<license type="expression">MIT</license>
+		<projectUrl>https://github.com/andrewleader/Vx.Wpf</projectUrl>
+
+		<!-- Optional elements -->
+		<!-- ... -->
+		<dependencies>
+			<group targetFramework="net6.0-windows7.0" />
+		</dependencies>
+	</metadata>
+	<!-- Optional 'files' node -->
+	<files>
+		<file src="bin\Debug\net6.0-windows\Vx.Wpf.Core.dll" target="lib\net6.0-windows7.0\Vx.Wpf.Core.dll" />
+		<file src="bin\Debug\net6.0-windows\Vx.Wpf.SourceGenerator.dll" target="analyzers\dotnet\cs\Vx.Wpf.SourceGenerator.dll" />
+	</files>
+</package>

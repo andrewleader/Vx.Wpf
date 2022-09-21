@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+	<NuspecFile>Vx.Wpf.nuspec</NuspecFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <ProjectReference Include="..\Vx.Wpf.Core\Vx.Wpf.Core.csproj">
+		  <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+		  <IncludeAssets>Vx.Wpf.Core.dll</IncludeAssets>
+	  </ProjectReference>
+	<ProjectReference Include="..\Vx.Wpf.SourceGenerator\Vx.Wpf.SourceGenerator.csproj">
+		<ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+		<IncludeAssets>Vx.Wpf.SourceGenerator.dll</IncludeAssets>
+	</ProjectReference>
+  </ItemGroup>
+
+	<Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+		<ItemGroup>
+			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
+		</ItemGroup>
+	</Target>
+
+</Project>

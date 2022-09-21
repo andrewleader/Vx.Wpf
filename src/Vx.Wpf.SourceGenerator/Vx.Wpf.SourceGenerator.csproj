@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<!--Must be netstandard2.0 for source generators to work-->
+    <TargetFramework>netstandard2.0</TargetFramework>
+	  <!-- 👇 We don't want to reference the source generator dll directly in consuming projects -->
+	  <IncludeBuildOutput>false</IncludeBuildOutput>
+	  <Version>0.0.2</Version>
+	  <!--Temp debug code to view the generated files-->
+	  <!--<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+	  <CompilerGeneratedFilesOutputPath>C:\Users\aleader\Documents\GitHub\WinVx\src\DebugGenerated</CompilerGeneratedFilesOutputPath>-->
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<!-- This ensures the library will be packaged as a source generator when we use `dotnet pack` -->
+	<ItemGroup>
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	</ItemGroup>
+
+</Project>
