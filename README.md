@@ -164,9 +164,37 @@ new VxTextBlock
 
 ![Mouse over example](images/MouseOver.gif)
 
-The event args from the event are currently NOT projected. Most events, like TextChanged or SelectionChanged simply require access to the raw UI element to get the current value, so support for passing through those event args haven't been added yet.
+> ⚠️ **KNOWN ISSUE**: The event args from the event are currently NOT projected. Most events, like TextChanged or SelectionChanged simply require access to the raw UI element to get the current value, so support for passing through those event args haven't been added yet.
 
-## How does it work?
+## Handling attached properties
+
+Grids and many other UI elements rely on "attached properties" to set values on child elements. For example, `Grid.SetColumn(textBlock, 1)`.
+
+These attached properties can be used by calling an extension method on the `VxElement` as seen below...
+
+```csharp
+new VxBorder
+{
+    Background = new SolidColorBrush(Colors.Red)
+}.AttachedProperties(el => Grid.SetColumn(el, 1))
+```
+
+If you have to set multiple attached properties, you can add brackets to the handler as seen below...
+
+```csharp
+new VxBorder
+{
+    Background = new SolidColorBrush(Colors.Red)
+}.AttachedProperties(el =>
+{
+    Grid.SetColumn(el, 1);
+    Grid.SetColumnSpan(el, 2);
+})
+```
+
+> ⚠️ **KNOWN ISSUE**: If attached properties are dynamically not set in a future `Render()`, they currently will not be removed from the element (they won't reset to their defaults). I recommend explicitly setting back to default value for now.
+
+## How does Vx work?
 
 1. Vx.Wpf uses C# source generators to generate, at runtime, `Vx*` wrappers for all of the WPF UI classes referenced in your project. This gives you `VxStackPanel`, `VxTextBlock`, and even `VxRandomThirdPartyControl` and more. All of the properties will be projected, including the event handlers projected as described above.
 2. The `VxComponent` uses these `Vx*` classes for the **virtual UI tree**. The initial call to `Render()` returns the initial UI tree, and then subsequent calls to `Render()` will perform a delta of the previous UI tree with the new one. The wrapped `Vx*` components are essential to ensure there's no additional initialization time of creating a new `TextBlock` only to throw it away.
