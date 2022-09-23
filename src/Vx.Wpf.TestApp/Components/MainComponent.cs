@@ -14,7 +14,8 @@ namespace Vx.Wpf.TestApp.Components
             typeof(TextBoxExampleComponent),
             typeof(StackPanelExampleComponent),
             typeof(BorderExampleComponent),
-            typeof(GridExampleComponent)
+            typeof(GridExampleComponent),
+            typeof(ScrollViewerExampleComponent)
         };
 
         private readonly VxState<Type?> _selectedPage = new VxState<Type?>(null);
